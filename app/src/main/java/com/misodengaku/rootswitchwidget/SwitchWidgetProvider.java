@@ -4,15 +4,17 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.RemoteViews;
 import android.app.PendingIntent;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SwitchWidgetProvider extends AppWidgetProvider {
 
@@ -58,7 +60,12 @@ public class SwitchWidgetProvider extends AppWidgetProvider {
 		Log.v("SwitchWidget", "onReceive");
 		super.onReceive(context, intent);
 
-
+        if (checkPuzleAndDragons(context))
+        {
+            Log.v("SwitchWidget", "パズルでドラをするな");
+            Toast.makeText(context, "パズルでドラをするな", Toast.LENGTH_LONG).show();
+            return;
+        }
 
 
         String action = intent.getAction();
@@ -108,4 +115,16 @@ public class SwitchWidgetProvider extends AppWidgetProvider {
             }
         }
 	}
+
+    public boolean checkPuzleAndDragons(Context context)
+    {
+        PackageManager packageManager = context.getPackageManager();
+        List<ApplicationInfo> applicationInfo = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+        for (ApplicationInfo info : applicationInfo) {
+            if (info.processName.equals("jp.gungho.pad")){
+                return true;
+            }
+        }
+        return false;
+    }
 }
