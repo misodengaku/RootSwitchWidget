@@ -34,3 +34,6 @@ proguard/
 *.ipr
 *.iws
 .idea/
+
+# generated package
+!rootwidget.apk
